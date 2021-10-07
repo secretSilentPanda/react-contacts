@@ -1,4 +1,5 @@
 import { deleteDoc, doc, setDoc } from "@firebase/firestore";
+import { motion } from "framer-motion";
 import React, { useRef, useState } from "react";
 import { db } from "../firebase/firebase";
 
