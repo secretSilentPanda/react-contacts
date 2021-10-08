@@ -1,13 +1,28 @@
-import AddContact from "./components/AddContact";
-import Contacts from "./components/Contacts";
-import { app } from "./firebase/firebase";
+import { useState } from "react";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Home from "./pages/Home";
+import { getAuth, onAuthStateChanged } from "@firebase/auth";
+import { Redirect } from "react-router";
 
 function App() {
+  const [user, setUser] = useState();
+
+  onAuthStateChanged(getAuth(), (user) => {
+    console.log(`user`, user);
+    setUser(user);
+  });
   return (
-    <div>
-      <AddContact />
-      <Contacts />
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/login">{user ? <Redirect to="/" /> : <Login />}</Route>
+        <Route path="/signup">{user ? <Redirect to="/" /> : <Signup />}</Route>
+        <Route exact path="/">
+          {user ? <Home user={user} /> : <Redirect to="/login" />}
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
