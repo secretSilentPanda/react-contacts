@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/secretSilentPanda/react-contacts.git/static/css/main.a3d8e7a1.chunk.css",
+    "main.js": "/secretSilentPanda/react-contacts.git/static/js/main.ea404bd3.chunk.js",
+    "main.js.map": "/secretSilentPanda/react-contacts.git/static/js/main.ea404bd3.chunk.js.map",
+    "runtime-main.js": "/secretSilentPanda/react-contacts.git/static/js/runtime-main.a1f54386.js",
+    "runtime-main.js.map": "/secretSilentPanda/react-contacts.git/static/js/runtime-main.a1f54386.js.map",
+    "static/js/2.c320b9a6.chunk.js": "/secretSilentPanda/react-contacts.git/static/js/2.c320b9a6.chunk.js",
+    "static/js/2.c320b9a6.chunk.js.map": "/secretSilentPanda/react-contacts.git/static/js/2.c320b9a6.chunk.js.map",
+    "index.html": "/secretSilentPanda/react-contacts.git/index.html",
+    "static/css/main.a3d8e7a1.chunk.css.map": "/secretSilentPanda/react-contacts.git/static/css/main.a3d8e7a1.chunk.css.map",
+    "static/js/2.c320b9a6.chunk.js.LICENSE.txt": "/secretSilentPanda/react-contacts.git/static/js/2.c320b9a6.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a1f54386.js",
+    "static/js/2.c320b9a6.chunk.js",
+    "static/css/main.a3d8e7a1.chunk.css",
+    "static/js/main.ea404bd3.chunk.js"
+  ]
+}
