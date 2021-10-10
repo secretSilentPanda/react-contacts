@@ -45,7 +45,7 @@ export default function Contacts({ user }) {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                exit={{ scale: 0, opacity: 0 }}
+                exit={{ scale: 0.8, opacity: 0 }}
                 layout
                 key={contact.email}
               >

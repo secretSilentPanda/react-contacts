@@ -9,7 +9,7 @@ export default function NavBar({ user }) {
     <nav className="w-full py-2 mb-6 duration-100 bg-blue-600 shadow-md">
       <div className="flex justify-between max-w-screen-lg px-10 mx-auto text-white ">
         <h1 className="text-xl font-bold shadow-sm">
-          {user.displayName}'s Contacts
+          {user?.displayName}'s Contacts
         </h1>
         <button
           onClick={handleClick}

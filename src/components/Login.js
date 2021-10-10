@@ -7,26 +7,21 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError(false);
-    setSuccess(false);
 
     try {
       await signInWithEmailAndPassword(getAuth(), email, password);
-      setSuccess("Logged in");
     } catch (error) {
-      console.log(`error.message`, error.message);
-      setError(error.message);
+      setError(error.message.substring(10));
     }
   }
   return (
     <motion.div
       initial={{ translateY: -20, opacity: 0 }}
       animate={{ translateY: 0, opacity: 1 }}
-      layoutId="box"
     >
       <form
         onSubmit={handleSubmit}
@@ -58,11 +53,6 @@ export default function Login() {
         {error && (
           <span className="py-1 my-2 text-center bg-red-200 border rounded-sm">
             {error}
-          </span>
-        )}
-        {success && (
-          <span className="py-1 my-2 text-center bg-green-200 border rounded-sm">
-            {success}
           </span>
         )}
       </form>

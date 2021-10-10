@@ -12,12 +12,10 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError(false);
-    setSuccess(false);
 
     if (name && email && password) {
       const auth = getAuth();
@@ -28,11 +26,8 @@ export default function Signup() {
         await updateProfile(auth.currentUser, {
           displayName: name,
         });
-        setSuccess("Success!");
       } catch (error) {
-        console.log(`error.message`, error.message);
-        console.log(`error`, error);
-        setError(error.message);
+        setError(error.message.substring(10));
       }
     }
   }
@@ -81,11 +76,6 @@ export default function Signup() {
         {error && (
           <span className="py-1 my-2 text-center bg-red-200 border rounded-sm">
             {error}
-          </span>
-        )}
-        {success && (
-          <span className="py-1 my-2 text-center bg-green-200 border rounded-sm">
-            {success}
           </span>
         )}
       </form>

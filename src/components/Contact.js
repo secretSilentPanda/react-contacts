@@ -1,14 +1,14 @@
 import { deleteDoc, doc, setDoc } from "@firebase/firestore";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { db } from "../firebase/firebase";
 
 export default function Contact({ contact, setContacts, user }) {
   const [newData, setNewData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     phoneNumber: "",
     email: "",
   });
-  const inputRef = useRef();
 
   function edit(contactToEdit) {
     setNewData(contactToEdit);
@@ -19,9 +19,6 @@ export default function Contact({ contact, setContacts, user }) {
           : { ...contact, editMode: false }
       )
     );
-    setTimeout(() => {
-      inputRef.current.focus();
-    }, 0);
   }
 
   async function deleteEntry(email) {
@@ -42,7 +39,7 @@ export default function Contact({ contact, setContacts, user }) {
     );
   }
   return (
-    <div className="relative flex flex-col p-3 m-2 space-y-1 duration-100 border rounded-md shadow-sm hover:shadow-md group">
+    <div className="relative flex flex-col py-3 pl-6 m-2 space-y-1 duration-100 border rounded-md shadow-sm hover:shadow-md group">
       <div className="absolute flex space-x-2 duration-100 opacity-0 right-1 top-2 group-hover:opacity-100">
         {!contact.editMode ? (
           <div
@@ -106,34 +103,68 @@ export default function Contact({ contact, setContacts, user }) {
         </div>
       </div>
       <div>
-        <div>
-          Name:&nbsp;
-          {contact.editMode ? (
-            <input
-              ref={inputRef}
-              className="inline-block px-2 text-lg font-bold bg-transparent rounded-sm bg-yellow-50"
-              value={newData.name}
-              name="name"
-              onChange={(e) =>
-                setNewData({
-                  ...newData,
-                  name: e.target.value,
-                })
-              }
-            ></input>
-          ) : (
-            <span className="px-2 text-lg font-bold bg-transparent">
-              {contact.name}
-            </span>
-          )}
+        <div className="my-2 space-y-2">
+          <div>
+            {contact.editMode ? (
+              <div className="flex items-center">
+                <span className="whitespace-nowrap"> First Name:&nbsp;</span>
+                <input
+                  autoComplete="off"
+                  className="px-2 text-lg bg-transparent rounded-sm bg-yellow-50"
+                  value={newData.firstName}
+                  name="firstName"
+                  onChange={(e) =>
+                    setNewData({
+                      ...newData,
+                      firstName: e.target.value,
+                    })
+                  }
+                ></input>
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <span> First Name:&nbsp;</span>
+                <div className="px-2 text-lg bg-transparent">
+                  {contact.firstName}
+                </div>
+              </div>
+            )}
+          </div>
+          <div>
+            {contact.editMode ? (
+              <div className="flex items-center">
+                <span className="whitespace-nowrap"> Last Name:&nbsp;</span>
+                <input
+                  autoComplete="off"
+                  className="px-2 text-lg bg-transparent rounded-sm w-min bg-yellow-50"
+                  value={newData.lastName}
+                  name="lastName"
+                  onChange={(e) =>
+                    setNewData({
+                      ...newData,
+                      lastName: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <span> Last Name:&nbsp;</span>
+                <div className="px-2 text-lg bg-transparent w-min">
+                  {contact.lastName}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+
         <div className="break-words">
           Email:&nbsp;
           <span className="text-blue-500 underline cursor-pointer">
             {contact.email}
           </span>
         </div>
-        <div>Phone number: {contact.phoneNumber}</div>
+        <div className="my-2">Phone number: {contact.phoneNumber}</div>
       </div>
     </div>
   );
