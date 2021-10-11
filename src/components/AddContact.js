@@ -15,12 +15,21 @@ export default function AddContact({ user }) {
   const [contactDetails, setContactDetails] = useState(initialState);
 
   async function handleSubmit(e) {
+    let res;
     e.preventDefault();
-    user?.email &&
-      (await setDoc(doc(db, user.email, contactDetails.email), contactDetails));
-    setTimeout(() => {
-      setContactDetails(initialState);
-    }, 0);
+    try {
+      user?.email &&
+        (res = await setDoc(
+          doc(db, "contacts/users", user.email, contactDetails.email),
+          contactDetails
+        ));
+      setTimeout(() => {
+        setContactDetails(initialState);
+      }, 0);
+      console.log(`res`, res);
+    } catch (error) {
+      console.log(`error.message`, error.message);
+    }
   }
   return (
     <form

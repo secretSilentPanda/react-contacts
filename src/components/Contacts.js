@@ -9,7 +9,7 @@ export default function Contacts({ user }) {
 
   useEffect(() => {
     if (user?.email) {
-      const q = collection(db, user?.email);
+      const q = collection(db, "contacts/users", user?.email);
       onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {

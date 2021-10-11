@@ -11,7 +11,7 @@ export default function Home({ user }) {
       animate={{ translateY: 0, opacity: 1, height: "auto" }}
       className="overflow-hidden"
     >
-      <NavBar user={user} />
+      <NavBar />
       <div className="mx-4">
         <AddContact user={user} />
         <Contacts user={user} />

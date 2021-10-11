@@ -10,6 +10,7 @@ function App() {
   const [user, setUser] = useState();
 
   onAuthStateChanged(getAuth(), (user) => {
+    console.log(`user`, user);
     setUser(user);
   });
   return (

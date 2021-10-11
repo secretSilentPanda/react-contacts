@@ -22,11 +22,11 @@ export default function Contact({ contact, setContacts, user }) {
   }
 
   async function deleteEntry(email) {
-    await deleteDoc(doc(db, user.email, email));
+    await deleteDoc(doc(db, "contacts/users", user.email, email));
   }
 
   async function finishEdits() {
-    await setDoc(doc(db, user.email, newData.email), newData);
+    await setDoc(doc(db, "contacts/users", user.email, newData.email), newData);
 
     setContacts((prev) => {
       return prev.map((contact) =>
