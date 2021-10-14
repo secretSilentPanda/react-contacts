@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -9,10 +9,12 @@ import { Redirect } from "react-router";
 function App() {
   const [user, setUser] = useState();
 
-  onAuthStateChanged(getAuth(), (user) => {
-    console.log(`user`, user);
-    setUser(user);
-  });
+  useEffect(() => {
+    onAuthStateChanged(getAuth(), (user) => {
+      setUser(user);
+    });
+  }, []);
+
   return (
     <Router basename="/react-contacts">
       <Switch>

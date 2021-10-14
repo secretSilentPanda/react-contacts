@@ -16,6 +16,7 @@ export default function Signup() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError(false);
+    //TODO add fname and lname to signup page
 
     if (name && email && password) {
       const auth = getAuth();

@@ -112,8 +112,8 @@ export default function AddContact({ user }) {
                 placeholder="Email"
               />
               <input
-                value={contactDetails.phoneNUmber}
-                name="phoneNUmber"
+                value={contactDetails.phoneNumber}
+                name="phoneNumber"
                 onChange={(e) =>
                   setContactDetails({
                     ...contactDetails,

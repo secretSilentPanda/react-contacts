@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { db } from "../firebase/firebase";
 
 export default function Contact({ contact, setContacts, user }) {
+  console.log(`contact`, contact);
   const [newData, setNewData] = useState({
     firstName: "",
     lastName: "",
