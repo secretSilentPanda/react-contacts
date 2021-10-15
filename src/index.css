@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.form_input {
+  @apply w-full px-2 py-1 mt-3 border-b;
+}
+
+.input_file_label {
+  @apply flex items-center justify-center w-full h-full px-4 mt-3 bg-center bg-cover border rounded-md shadow-sm cursor-pointer;
+}

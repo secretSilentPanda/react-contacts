@@ -46,6 +46,7 @@ export default function Contacts({ user }) {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0 }}
+                transition={{ duration: 0.1 }}
                 layout
                 key={contact.email}
               >

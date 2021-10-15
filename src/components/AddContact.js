@@ -22,19 +22,18 @@ export default function AddContact({ user }) {
   const avatarRef = useRef();
 
   useEffect(() => {
-    imageURL && foo();
+    imageURL && addDocInDb();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageURL]);
 
-  async function foo() {
+  async function addDocInDb() {
     user?.email &&
       (await setDoc(
         doc(db, "contacts/users", user.email, contactDetails.email),
         { ...contactDetails, imageURL }
       ));
-    setTimeout(() => {
-      setContactDetails(initialState);
-    }, 0);
+    setContactDetails(initialState);
+    setUserImage("");
     firstNameRef?.current?.focus();
   }
 
@@ -48,8 +47,37 @@ export default function AddContact({ user }) {
         progressRef.current
       );
       setImageURL(downloadURL);
-    } else foo();
+    } else addDocInDb();
   }
+
+  function openForm() {
+    setOpenAddContact((prev) => !prev);
+    setTimeout(() => {
+      !openAddContact && firstNameRef?.current?.focus();
+    }, 0);
+  }
+
+  function updateContactDetails(e) {
+    setContactDetails({
+      ...contactDetails,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  useEffect(() => {
+    if (avatarRef.current) {
+      if (userImage)
+        avatarRef.current.style.backgroundImage = `url(${URL.createObjectURL(
+          userImage
+        )})`;
+      else avatarRef.current.style.backgroundImage = "url(no_avatar.jpg)";
+    }
+  }, [userImage]);
+
+  function setInputBg(e) {
+    setUserImage(e.target.files[0]);
+  }
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -58,12 +86,7 @@ export default function AddContact({ user }) {
       } `}
     >
       <svg
-        onClick={() => {
-          setOpenAddContact((prev) => !prev);
-          setTimeout(() => {
-            !openAddContact && firstNameRef?.current?.focus();
-          }, 0);
-        }}
+        onClick={openForm}
         xmlns="http://www.w3.org/2000/svg"
         className={`transform duration-300 text-gray-500 mb-2 ${
           openAddContact ? "rotate-45 text-red-500 w-6 h-6" : "w-10 h-10"
@@ -87,36 +110,26 @@ export default function AddContact({ user }) {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="flex space-x-2">
+            <div className="flex justify-between mr-4 space-x-4">
               <div className="mr-2">
                 <input
                   required
                   ref={firstNameRef}
-                  className="w-full px-2 py-1 mt-3 border rounded-md"
+                  className="form_input"
                   value={contactDetails.firstName}
                   name="firstName"
                   autoComplete="off"
-                  onChange={(e) =>
-                    setContactDetails({
-                      ...contactDetails,
-                      [e.target.name]: e.target.value,
-                    })
-                  }
+                  onChange={updateContactDetails}
                   type="text"
                   placeholder="First name"
                 />
                 <input
                   required
-                  className="w-full px-2 py-1 mt-3 border rounded-md"
+                  className="form_input"
                   value={contactDetails.lastName}
                   name="lastName"
                   autoComplete="off"
-                  onChange={(e) =>
-                    setContactDetails({
-                      ...contactDetails,
-                      [e.target.name]: e.target.value,
-                    })
-                  }
+                  onChange={updateContactDetails}
                   type="text"
                   placeholder="Last name"
                 />
@@ -125,26 +138,16 @@ export default function AddContact({ user }) {
                   required
                   value={contactDetails.email}
                   name="email"
-                  onChange={(e) =>
-                    setContactDetails({
-                      ...contactDetails,
-                      [e.target.name]: e.target.value,
-                    })
-                  }
-                  className="w-full px-2 py-1 mt-3 border rounded-md"
+                  onChange={updateContactDetails}
+                  className="form_input"
                   type="text"
                   placeholder="Email"
                 />
                 <input
-                  value={contactDetails.phoneNumber}
+                  value={parseInt(contactDetails.phoneNumber)}
                   name="phoneNumber"
-                  onChange={(e) =>
-                    setContactDetails({
-                      ...contactDetails,
-                      [e.target.name]: e.target.value,
-                    })
-                  }
-                  className="w-full px-2 py-1 mt-3 border rounded-md"
+                  onChange={updateContactDetails}
+                  className="form_input"
                   type="number"
                   placeholder="Phone"
                 />
@@ -156,12 +159,12 @@ export default function AddContact({ user }) {
                   ref={avatarRef}
                   style={{ backgroundImage: "url(no_avatar.jpg)" }}
                   htmlFor="image"
-                  className="flex items-center justify-center w-full h-full px-4 mt-3 bg-center bg-cover border rounded-md shadow-sm cursor-pointer"
+                  className="input_file_label"
                 >
                   {!userImage && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="w-16 h-16 mb-10 opacity-30"
+                      className="w-16 h-16 mt-24 opacity-30"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -180,12 +183,7 @@ export default function AddContact({ user }) {
                     id="image"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => {
-                      avatarRef.current.style.backgroundImage = `url(${URL.createObjectURL(
-                        e.target.files[0]
-                      )})`;
-                      setUserImage(e.target.files[0]);
-                    }}
+                    onChange={setInputBg}
                   />
                 </label>
               </div>
