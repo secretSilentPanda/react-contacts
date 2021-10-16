@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { db } from "../firebase/firebase";
 import uploadFile from "../components/helpers/uploadFile";
+import ImageInput from "./helper-components/ImageInput";
 
 const initialState = {
   email: "",
@@ -154,38 +155,11 @@ export default function AddContact({ user }) {
               </div>
 
               <div className="flex w-32 mb-3">
-                <label
-                  tabIndex="0"
-                  ref={avatarRef}
-                  style={{ backgroundImage: "url(no_avatar.jpg)" }}
-                  htmlFor="image"
-                  className="input_file_label"
-                >
-                  {!userImage && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-16 h-16 mt-24 opacity-30"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  )}
-
-                  <input
-                    className="hidden"
-                    id="image"
-                    type="file"
-                    accept="image/*"
-                    onChange={setInputBg}
-                  />
-                </label>
+                <ImageInput
+                  avatarRef={avatarRef}
+                  userImage={userImage}
+                  setInputBg={setInputBg}
+                />
               </div>
             </div>
             <button className="w-full py-1 my-3 text-white bg-blue-500 rounded-md">

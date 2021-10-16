@@ -1,6 +1,13 @@
 import { deleteDoc, doc, setDoc } from "@firebase/firestore";
 import React, { useState } from "react";
+import { useRef } from "react/cjs/react.development";
 import { db } from "../firebase/firebase";
+import {
+  DeleteButton,
+  DoneButton,
+  EditButton,
+} from "./helper-components/Buttons";
+import { edit } from "./helpers/contactEditors";
 
 export default function Contact({ contact, setContacts, user }) {
   const [newData, setNewData] = useState({
@@ -10,27 +17,23 @@ export default function Contact({ contact, setContacts, user }) {
     email: "",
   });
 
-  function edit(contactToEdit) {
-    setNewData(contactToEdit);
-    setContacts((prev) =>
-      prev.map((contact) =>
-        contact.email === contactToEdit.email
-          ? { ...contact, editMode: true }
-          : { ...contact, editMode: false }
-      )
-    );
-  }
+  const firstNameRef = useRef();
 
   async function deleteEntry(email) {
     await deleteDoc(doc(db, "contacts/users", user.email, email));
   }
 
   async function finishEdits() {
-    await setDoc(doc(db, "contacts/users", user.email, newData.email), newData);
+    const { editMode, ...updatedContact } = newData;
+    await setDoc(
+      doc(db, "contacts/users", user.email, newData.email),
+      updatedContact
+    );
 
     setContacts((prev) => {
+      const { editMode, ...updatedContact } = newData;
       return prev.map((contact) =>
-        contact.email === newData.email ? newData : contact
+        contact.email === newData.email ? updatedContact : contact
       );
     });
 
@@ -38,94 +41,64 @@ export default function Contact({ contact, setContacts, user }) {
       prev.map((contact) => ({ ...contact, editMode: false }))
     );
   }
+
+  function setData(e, name) {
+    setNewData({
+      ...newData,
+      [name]: e.target.value,
+    });
+  }
+
   return (
-    <div className="relative flex justify-between px-2 py-3 m-2 space-y-1 duration-100 border rounded-md shadow-sm hover:shadow-md group">
-      <div>
+    <div className="relative flex flex-wrap justify-between px-2 py-3 m-2 space-y-1 duration-100 border rounded-md shadow-sm bg-green-50 hover:shadow-md group">
+      <div className="mx-3 bg-redd-100">
         <div className="absolute flex space-x-2 duration-200 opacity-0 right-1 top-2 group-hover:opacity-100">
           {!contact.editMode ? (
             <div
-              onClick={() => edit(contact)}
-              className="bg-white rounded-md cursor-pointer"
+              onClick={() => edit(contact, setNewData, setContacts)}
+              className="bg-white rounded-md"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
+              <EditButton />
             </div>
           ) : (
-            <div
-              onClick={finishEdits}
-              className="bg-white rounded-full cursor-pointer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+            <div onClick={finishEdits} className="bg-white rounded-full ">
+              <DoneButton />
             </div>
           )}
           <div
-            className="text-red-500 cursor-pointer"
+            className="text-red-500 "
             onClick={() => deleteEntry(contact.email)}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 bg-white rounded-full"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <DeleteButton />
           </div>
         </div>
         <div>
           <div className="my-2 space-y-2">
             <div>
               {contact.editMode ? (
-                <div className="flex items-center">
+                <div className="flex items-start">
                   <span className="whitespace-nowrap"> First Name:&nbsp;</span>
                   <input
+                    ref={firstNameRef}
+                    style={{
+                      width:
+                        (newData.firstName.length || contact.firstName.length) +
+                        2 +
+                        "ch",
+                    }}
                     autoComplete="off"
-                    className="px-2 text-lg bg-transparent rounded-sm bg-yellow-50"
+                    className="editable"
                     value={newData.firstName}
                     name="firstName"
-                    onChange={(e) =>
-                      setNewData({
-                        ...newData,
-                        firstName: e.target.value,
-                      })
-                    }
+                    onChange={(e) => {
+                      setData(e, "firstName");
+                    }}
                   ></input>
                 </div>
               ) : (
-                <div className="flex items-center">
-                  <span> First Name:&nbsp;</span>
-                  <div className="px-2 text-lg bg-transparent">
+                <div className="flex max-w-full place-items-start">
+                  <span className="whitespace-nowrap"> First Name:&nbsp;</span>
+                  <div className="px-2 text-lg break-all">
                     {contact.firstName}
                   </div>
                 </div>
@@ -137,21 +110,22 @@ export default function Contact({ contact, setContacts, user }) {
                   <span className="whitespace-nowrap"> Last Name:&nbsp;</span>
                   <input
                     autoComplete="off"
-                    className="px-2 text-lg bg-transparent rounded-sm w-min bg-yellow-50"
+                    className="editable"
+                    style={{
+                      width:
+                        (newData.lastName.length || contact.lastName.length) +
+                        2 +
+                        "ch",
+                    }}
                     value={newData.lastName}
                     name="lastName"
-                    onChange={(e) =>
-                      setNewData({
-                        ...newData,
-                        lastName: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setData(e, "lastName")}
                   />
                 </div>
               ) : (
                 <div className="flex items-center">
-                  <span> Last Name:&nbsp;</span>
-                  <div className="px-2 text-lg bg-transparent w-min">
+                  <span className="whitespace-nowrap"> Last Name:&nbsp;</span>
+                  <div className="px-2 text-lg break-all">
                     {contact.lastName}
                   </div>
                 </div>
@@ -161,11 +135,13 @@ export default function Contact({ contact, setContacts, user }) {
 
           <div className="break-words">
             Email:&nbsp;
-            <span className="text-blue-500 underline break-all border cursor-pointer">
+            <span className="text-blue-500 underline break-all ">
               {contact.email}
             </span>
           </div>
-          <div className="my-2">Phone number: {contact.phoneNumber}</div>
+          <div className="my-2">
+            Phone number: <div>{contact.phoneNumber}</div>{" "}
+          </div>
         </div>
       </div>
       <img
