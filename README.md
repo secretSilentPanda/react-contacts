@@ -1,1 +1,1 @@
-Contactws app using React, tailwind and firebase
+Contacts app using React, tailwind and firebase
